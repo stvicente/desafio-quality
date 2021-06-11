@@ -1,12 +1,12 @@
 package com.desafio.quality.dto;
 
-public class MetragemDTO {
+public class SizeDTO {
     public String roomName;
     public double roomSize;
 
-    public MetragemDTO() { }
+    public SizeDTO() { }
 
-    public MetragemDTO(String roomName, double roomSize) {
+    public SizeDTO(String roomName, double roomSize) {
         this.roomName = roomName;
         this.roomSize = roomSize;
     }
