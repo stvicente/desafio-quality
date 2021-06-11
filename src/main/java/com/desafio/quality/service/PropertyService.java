@@ -1,11 +1,9 @@
 package com.desafio.quality.service;
 
-import com.desafio.quality.dto.RoomDTO;
-import com.desafio.quality.dto.SizeDTO;
 import com.desafio.quality.dto.PropertyDTO;
 import com.desafio.quality.dto.PropertyResponseDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.desafio.quality.dto.RoomDTO;
+import com.desafio.quality.dto.SizeDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,22 +25,21 @@ public class PropertyService {
     }
 
 
-    private RoomDTO biggestRoom(List<RoomDTO> rooms){
+    public RoomDTO biggestRoom(List<RoomDTO> rooms){
         return rooms
                 .stream()
                 .max(Comparator.comparing(c -> (c.getRoomWidth() * c.getRoomLength())))
                 .orElse(null);
-//        .get()
     }
 
-    private double totalSize(List<RoomDTO> rooms){
+    public double totalSize(List<RoomDTO> rooms){
         return rooms
                 .stream()
                 .mapToDouble(c ->c.getRoomLength() * c.getRoomWidth())
                 .sum();
     }
 
-    private List<SizeDTO> sizePerRoom(List<RoomDTO> rooms){
+    public List<SizeDTO> sizePerRoom(List<RoomDTO> rooms){
         List<SizeDTO> size = new ArrayList<>();
         for(RoomDTO c : rooms){
             SizeDTO sizePerRoom = new SizeDTO();
@@ -53,7 +50,7 @@ public class PropertyService {
         return size;
     }
 
-    private Double districtValue(PropertyDTO propertyDTO) throws Exception {
+    public Double districtValue(PropertyDTO propertyDTO) throws Exception {
         Map<String, Double> districts = new HashMap<>();
         districts.put("Chatuba", 22.);
         districts.put("Rocha Sobrinho", 25.);
