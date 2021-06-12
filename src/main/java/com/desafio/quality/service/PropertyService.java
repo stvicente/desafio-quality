@@ -1,11 +1,9 @@
-package com.desafio.quality.service;
+package com.desafio.quality.unit;
 
-import com.desafio.quality.dto.RoomDTO;
-import com.desafio.quality.dto.SizeDTO;
 import com.desafio.quality.dto.PropertyDTO;
 import com.desafio.quality.dto.PropertyResponseDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.desafio.quality.dto.RoomDTO;
+import com.desafio.quality.dto.SizeDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -17,51 +15,48 @@ public class PropertyService {
         PropertyResponseDTO response = new PropertyResponseDTO();
         List<RoomDTO> rooms = propertyDTO.getRooms();
         double value = districtValue(propertyDTO);
-//        if(value < 0) throw new Exception("District is invalid");
         double size = totalSize(propertyDTO.getRooms());
-        response.setValue(size*value);
-        response.setTotalSize(size);
-        response.setBiggestRoom(biggestRoom(rooms));
-        response.setSizePerRoom(sizePerRoom(rooms));
-        return response;
+        RoomDTO biggestRoom = biggestRoom(rooms);
+        List<SizeDTO> sizePerRoom = sizePerRoom(rooms);
+        return new PropertyResponseDTO(size, size*value, biggestRoom, sizePerRoom);
     }
 
-
-    private RoomDTO biggestRoom(List<RoomDTO> rooms){
+    public RoomDTO biggestRoom(List<RoomDTO> rooms){
         return rooms
                 .stream()
                 .max(Comparator.comparing(c -> (c.getRoomWidth() * c.getRoomLength())))
                 .orElse(null);
-//        .get()
     }
 
-    private double totalSize(List<RoomDTO> rooms){
-        return rooms
+    public double totalSize(List<RoomDTO> rooms){
+        double totalSize = rooms
                 .stream()
-                .mapToDouble(c ->c.getRoomLength() * c.getRoomWidth())
+                .mapToDouble(c -> c.getRoomLength() * c.getRoomWidth())
                 .sum();
+        return Math.round(totalSize * 100.0) / 100.0;
     }
 
-    private List<SizeDTO> sizePerRoom(List<RoomDTO> rooms){
+    public List<SizeDTO> sizePerRoom(List<RoomDTO> rooms){
         List<SizeDTO> size = new ArrayList<>();
         for(RoomDTO c : rooms){
             SizeDTO sizePerRoom = new SizeDTO();
             sizePerRoom.setRoomName(c.getRoomName());
-            sizePerRoom.setRoomSize(c.getRoomWidth()* c.getRoomLength());
+            double roomSize = c.getRoomWidth()* c.getRoomLength();
+            sizePerRoom.setRoomSize(Math.round(roomSize * 100.0) / 100.0);
             size.add(sizePerRoom);
         }
         return size;
     }
 
-    private Double districtValue(PropertyDTO propertyDTO) throws Exception {
+    public double districtValue(PropertyDTO propertyDTO) throws Exception {
         Map<String, Double> districts = new HashMap<>();
-        districts.put("Chatuba", 22.);
-        districts.put("Rocha Sobrinho", 25.);
-        districts.put("Centro", 35.);
-        districts.put("Cosmorama", 28.);
-        districts.put("BNH", 30.);
-        String district = propertyDTO.getPropDistrict();
-        if(districts.containsKey(district)) return districts.get(district);
+        districts.put("chatuba", 22.);
+        districts.put("rocha sobrinho", 25.);
+        districts.put("centro", 35.);
+        districts.put("cosmorama", 28.);
+        districts.put("bnh", 30.);
+        String district = propertyDTO.getPropDistrict().toLowerCase();
+        if(districts.containsKey(district)) return Math.round(districts.get(district) * 100.0) / 100.0;
         else {
             throw new Exception("District is invalid");
         }

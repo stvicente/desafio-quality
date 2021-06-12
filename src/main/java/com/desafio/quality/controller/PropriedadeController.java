@@ -1,7 +1,7 @@
-package com.desafio.quality.controller;
+package com.desafio.quality.integration;
 
 import com.desafio.quality.dto.PropertyDTO;
-import com.desafio.quality.service.PropertyService;
+import com.desafio.quality.unit.PropertyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
