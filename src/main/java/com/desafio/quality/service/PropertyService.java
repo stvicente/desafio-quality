@@ -1,4 +1,4 @@
-package com.desafio.quality.unit;
+package com.desafio.quality.service;
 
 import com.desafio.quality.dto.PropertyDTO;
 import com.desafio.quality.dto.PropertyResponseDTO;
@@ -11,20 +11,27 @@ import java.util.*;
 @Service
 public class PropertyService {
 
-    public PropertyResponseDTO propertyValue(PropertyDTO propertyDTO) throws Exception {
-        PropertyResponseDTO response = new PropertyResponseDTO();
-        List<RoomDTO> rooms = propertyDTO.getRooms();
-        double value = districtValue(propertyDTO);
-        double size = totalSize(propertyDTO.getRooms());
-        RoomDTO biggestRoom = biggestRoom(rooms);
-        List<SizeDTO> sizePerRoom = sizePerRoom(rooms);
-        return new PropertyResponseDTO(size, size*value, biggestRoom, sizePerRoom);
+    Map<String, Double> districts = new HashMap<>();
+
+    public PropertyService(){
+        districts.put("chatuba", 22.);
+        districts.put("rocha sobrinho", 25.);
+        districts.put("centro", 35.);
+        districts.put("cosmorama", 28.);
+        districts.put("bnh", 30.);
     }
 
-    public RoomDTO biggestRoom(List<RoomDTO> rooms){
-        return rooms
+    public PropertyResponseDTO propertyValue(PropertyDTO propertyDTO) throws RuntimeException {
+        List<RoomDTO> rooms = propertyDTO.getRooms();
+        double value = districtValue(propertyDTO);
+        double size = totalSize(rooms);
+        return new PropertyResponseDTO(size, size*value, biggestRoom(rooms), sizePerRoom(rooms));
+    }
+
+    public SizeDTO biggestRoom(List<RoomDTO> rooms){
+        return sizePerRoom(rooms)
                 .stream()
-                .max(Comparator.comparing(c -> (c.getRoomWidth() * c.getRoomLength())))
+                .max(Comparator.comparing(SizeDTO::getRoomSize))
                 .orElse(null);
     }
 
@@ -48,17 +55,11 @@ public class PropertyService {
         return size;
     }
 
-    public double districtValue(PropertyDTO propertyDTO) throws Exception {
-        Map<String, Double> districts = new HashMap<>();
-        districts.put("chatuba", 22.);
-        districts.put("rocha sobrinho", 25.);
-        districts.put("centro", 35.);
-        districts.put("cosmorama", 28.);
-        districts.put("bnh", 30.);
+    public double districtValue(PropertyDTO propertyDTO) throws RuntimeException {
         String district = propertyDTO.getPropDistrict().toLowerCase();
         if(districts.containsKey(district)) return Math.round(districts.get(district) * 100.0) / 100.0;
         else {
-            throw new Exception("District is invalid");
+            throw new RuntimeException("District is invalid");
         }
     }
 

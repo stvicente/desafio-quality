@@ -5,12 +5,12 @@ import java.util.List;
 public class PropertyResponseDTO {
     public double totalSize;
     public double value;
-    public RoomDTO biggestRoom;
+    public SizeDTO biggestRoom;
     public List<SizeDTO> sizePerRoom;
 
     public PropertyResponseDTO() {}
 
-    public PropertyResponseDTO(double totalSize, double value, RoomDTO biggestRoom, List<SizeDTO> sizePerRoom) {
+    public PropertyResponseDTO(double totalSize, double value, SizeDTO biggestRoom, List<SizeDTO> sizePerRoom) {
         this.totalSize = totalSize;
         this.value = value;
         this.biggestRoom = biggestRoom;
@@ -33,11 +33,11 @@ public class PropertyResponseDTO {
         this.value = value;
     }
 
-    public RoomDTO getBiggestRoom() {
+    public SizeDTO getBiggestRoom() {
         return biggestRoom;
     }
 
-    public void setBiggestRoom(RoomDTO biggestRoom) {
+    public void setBiggestRoom(SizeDTO biggestRoom) {
         this.biggestRoom = biggestRoom;
     }
 
