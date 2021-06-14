@@ -21,12 +21,6 @@ public class PropertyDTO {
 
     public PropertyDTO(){}
 
-    public PropertyDTO(String propName, String propDistrict, List<RoomDTO> rooms) {
-        this.propName = propName;
-        this.propDistrict = propDistrict;
-        this.rooms = rooms;
-    }
-
     public String getPropName() {
         return propName;
     }
