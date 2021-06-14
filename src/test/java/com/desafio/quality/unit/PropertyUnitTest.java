@@ -8,17 +8,24 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class PropertyUnitTest {
         PropertyService propertyService = new PropertyService();
         static PropertyDTO propertyDTO;
+
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
 
         @BeforeAll
         static void init(){
@@ -31,7 +38,6 @@ public class PropertyUnitTest {
             propertyDTO.setPropDistrict("BNH");
             propertyDTO.setRooms(rooms);
         }
-
 
         @Test
         void shouldCalculateCorrectPropertySize() {
@@ -48,10 +54,16 @@ public class PropertyUnitTest {
         }
 
         @Test
+        public void shouldReturnFalseIfPropertyNameValidationIsEmpty() {
+            propertyDTO.setPropName("casa da pandora");
+            Set<ConstraintViolation<PropertyDTO>> violations = validator.validate(propertyDTO);
+            assertFalse(violations.isEmpty());
+        }
+
+        @Test
         void shouldReturnValuePerM2IfDistrictIsValid() throws RuntimeException {
             double valuePerM2 = propertyService.districtValue(propertyDTO);
             assertEquals(valuePerM2, 30.);
-
         }
 
         @Test

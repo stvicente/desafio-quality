@@ -1,6 +1,6 @@
 package com.desafio.quality.exception;
 
-import com.desafio.quality.exception.dto.ValidationErrorDTO;
+import com.desafio.quality.exception.dto.ValidationExceptionDTO;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -21,15 +21,16 @@ public class PropertyControllerExceptionHandler {
         this.messageSource = messageSource;
     }
 
+//    formata a exception levantada pelas anotações de validação
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public List<ValidationErrorDTO> handleValidation(MethodArgumentNotValidException exception) {
-        List<ValidationErrorDTO> validationErrorsDTO = new ArrayList<>();
+    public List<ValidationExceptionDTO> handleValidation(MethodArgumentNotValidException exception) {
+        List<ValidationExceptionDTO> validationErrorsDTO = new ArrayList<>();
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
         fieldErrors.forEach(e -> {
             String message = messageSource.getMessage(e, LocaleContextHolder.getLocale());
-            validationErrorsDTO.add(new ValidationErrorDTO(e.getField(), message));
+            validationErrorsDTO.add(new ValidationExceptionDTO(e.getField(), message));
         });
 
         return validationErrorsDTO;
