@@ -4,7 +4,6 @@ public class SizeDTO {
     public String roomName;
     public double roomSize;
 
-    public SizeDTO() { }
 
     public SizeDTO(String roomName, double roomSize) {
         this.roomName = roomName;

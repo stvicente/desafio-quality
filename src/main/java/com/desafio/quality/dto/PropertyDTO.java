@@ -7,27 +7,19 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 public class PropertyDTO {
-    @Valid
+
     @NotBlank(message = "Property name cannot be empty.")
     @Size(min = 1, max = 30, message="Property name cannot be longer than 30 characters")
     @Pattern(regexp = "[A-Z].*", message = "Property name must start with a capital letter")
     private String propName;
 
-    @Valid
     @NotBlank(message = "District name cannot be empty")
     @Size(min = 1, max = 45, message="District name cannot be longer than 45 characters")
     private String propDistrict;
 
-    @Valid
-    private List<RoomDTO> rooms;
+    private List<@Valid RoomDTO> rooms;
 
     public PropertyDTO(){}
-
-    public PropertyDTO(String propName, String propDistrict, List<RoomDTO> rooms) {
-        this.propName = propName;
-        this.propDistrict = propDistrict;
-        this.rooms = rooms;
-    }
 
     public String getPropName() {
         return propName;
