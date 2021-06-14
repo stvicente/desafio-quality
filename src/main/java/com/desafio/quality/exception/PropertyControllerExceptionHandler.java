@@ -23,7 +23,7 @@ public class PropertyControllerExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public List<ValidationErrorDTO> handle(MethodArgumentNotValidException exception) {
+    public List<ValidationErrorDTO> handleValidation(MethodArgumentNotValidException exception) {
         List<ValidationErrorDTO> validationErrorsDTO = new ArrayList<>();
         List<FieldError> fieldErrors = exception.getBindingResult().getFieldErrors();
 
@@ -37,7 +37,7 @@ public class PropertyControllerExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-    public String handle(RuntimeException exception) {
-        return exception.toString();
+    public String handleRuntime(RuntimeException exception) {
+        return exception.getMessage();
     }
 }
