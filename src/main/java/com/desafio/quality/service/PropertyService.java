@@ -11,14 +11,19 @@ import java.util.*;
 @Service
 public class PropertyService {
 
-    Map<String, Double> districts = new HashMap<>();
+    private static final Map<String, Double> districts =
+            new HashMap<>() {{
+                put("chatuba", 22.);
+                put("rocha sobrinho", 25.);
+                put("centro", 35.);
+                put("cosmorama", 28.);
+                put("bnh", 30.);
+            }};
 
-    public PropertyService(){
-        districts.put("chatuba", 22.);
-        districts.put("rocha sobrinho", 25.);
-        districts.put("centro", 35.);
-        districts.put("cosmorama", 28.);
-        districts.put("bnh", 30.);
+    private double round(double num){ return Math.round(num * 100.0) / 100.0; }
+
+    private double caculateArea(RoomDTO roomDTO){
+        return roomDTO.getRoomLength() * roomDTO.getRoomWidth();
     }
 
     public PropertyResponseDTO propertyValue(PropertyDTO propertyDTO) throws RuntimeException {
@@ -38,29 +43,21 @@ public class PropertyService {
     public double totalSize(List<RoomDTO> rooms){
         double totalSize = rooms
                 .stream()
-                .mapToDouble(c -> c.getRoomLength() * c.getRoomWidth())
+                .mapToDouble(this::caculateArea)
                 .sum();
-        return Math.round(totalSize * 100.0) / 100.0;
+        return round(totalSize);
     }
 
     public List<SizeDTO> sizePerRoom(List<RoomDTO> rooms){
-        List<SizeDTO> size = new ArrayList<>();
-        for(RoomDTO c : rooms){
-            SizeDTO sizePerRoom = new SizeDTO();
-            sizePerRoom.setRoomName(c.getRoomName());
-            double roomSize = c.getRoomWidth()* c.getRoomLength();
-            sizePerRoom.setRoomSize(Math.round(roomSize * 100.0) / 100.0);
-            size.add(sizePerRoom);
-        }
-        return size;
+        List<SizeDTO> sizePerRoom = new ArrayList<>();
+        rooms.forEach(room -> sizePerRoom.add(new SizeDTO(room.getRoomName(), caculateArea(room))));
+        return sizePerRoom;
     }
 
     public double districtValue(PropertyDTO propertyDTO) throws RuntimeException {
         String district = propertyDTO.getPropDistrict().toLowerCase();
-        if(districts.containsKey(district)) return Math.round(districts.get(district) * 100.0) / 100.0;
-        else {
-            throw new RuntimeException("District is invalid");
-        }
+        if(districts.containsKey(district)) return round(districts.get(district));
+        else throw new RuntimeException("District is invalid");
     }
 
 }
